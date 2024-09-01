@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helm-db-mysql-deployment
+spec:
+  selector:
+    matchLabels:
+      app: helm-db-mysql
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: helm-db-mysql
+    spec:
+      containers:
+        - name: helm-db-mysql
+          image: mysql:latest
+          ports:
+            - containerPort: 3306
+          volumeMounts: 
+          - mountPath: /log
+            name: helm-db-claim
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom :
+                secretKeyRef :
+                  name : helm-app-secret
+                  key :  password
+            - name: MYSQL_DATABASE
+              valueFrom :
+                configMapKeyRef :
+                  name : helm-app-config-map
+                  key :  dbname
+      volumes:
+      - name: helm-db-claim
+        persistentVolumeClaim:
+         claimName: helm-app-db-claim-volume

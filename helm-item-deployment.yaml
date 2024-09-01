@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helm-item-service-deployment
+  labels:
+    app: helm-item-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: helm-item-service
+  template:
+    metadata:
+      labels:
+        app: helm-item-service
+    spec:
+      containers:
+      - name: helm-item-service
+        image: aruna451/helm-item-service:1.0.0
+        ports:
+        - containerPort: 8282
+        envFrom:
+        - secretRef:
+            name: helm-app-secret
+        - configMapRef:
+            name: helm-app-config-map
+
+

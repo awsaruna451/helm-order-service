@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helm-order-service-deployment
+  labels:
+    app: helm-order-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: helm-order-service
+  template:
+    metadata:
+      labels:
+        app: helm-order-service
+    spec:
+      containers:
+      - name: helm-order-service
+        image: aruna451/helm-order-service:1.0.1
+        ports:
+        - containerPort: 8181
+        envFrom:
+        - secretRef:
+            name: helm-app-secret
+        - configMapRef:
+            name: helm-app-config-map
+
